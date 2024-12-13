@@ -12,7 +12,7 @@ def home():
 def ask(prompt :str):
     res = requests.post('http://ollama:11434/api/generate', json={
         "prompt": prompt,
-        "stream" : False,
+        "stream" : True,
         "model" : "llama3.3:70b"
     })
 
