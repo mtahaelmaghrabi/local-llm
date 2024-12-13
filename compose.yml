@@ -9,20 +9,56 @@ services:
       - ./fastapi:/app
     networks:
       - llama-net
+
   ollama:
-    build: ollama
+    image: ollama/ollama
     ports:
       - 11434:11434
     volumes:
-      - llama-vol:/ollama
+      - ollama:/root/.ollama  # Match the volume path
     networks:
       - llama-net
-    entrypoint: ["/usr/bin/bash", "/pull-llama3.sh"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]  # Enable GPU usage
 
 networks:
   llama-net:
     driver: bridge
 
 volumes:
-  llama-vol:
-    driver: local
+  ollama:
+    external: true
+
+
+# version: "3"
+
+# services:
+#   web:
+#     build: fastapi
+#     ports:
+#       - 8000:8000
+#     volumes:
+#       - ./fastapi:/app
+#     networks:
+#       - llama-net
+#   ollama:
+#     build: ollama
+#     ports:
+#       - 11434:11434
+#     volumes:
+#       - llama-vol:/ollama
+#     networks:
+#       - llama-net
+#     entrypoint: ["/usr/bin/bash", "/pull-llama3.sh"]
+
+# networks:
+#   llama-net:
+#     driver: bridge
+
+# volumes:
+#   llama-vol:
+#     driver: local
